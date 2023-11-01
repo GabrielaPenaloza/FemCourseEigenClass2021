@@ -37,6 +37,8 @@ void exact(const VecDouble &point,VecDouble &val, MatrixDouble &deriv);
 
 int main ()
 {
+    //criação da malha geométrica e preenchimento das propiedades da mesma
+    //basada na malha do Gmesh chamada oneD.msh
     GeoMesh gmesh;
     ReadGmsh read;
     std::string filename("oneD.msh");
@@ -45,42 +47,55 @@ int main ()
 #endif
     read.Read(gmesh,filename);
 
+    //criçao da maha computacional e de mathstatement de Poisson com matid 1
     CompMesh cmesh(&gmesh);
     MatrixDouble perm(3,3);
     perm.setZero();
     perm(0,0) = 1.;
     perm(1,1) = 1.;
     perm(2,2) = 1.;
-    Poisson *mat1 = new Poisson(1,perm);
+    Poisson *mat1 = new Poisson(1/*matid*/,perm);
     mat1->SetDimension(1);
     
+
+    //Função conhecida da nossa equação doferencial que irá para o vetor de carga
     auto force = [](const VecDouble &x, VecDouble &res)
     {
-        res[0] = 1.;
+        //-u''=force(x)
+        //force(x)=x^2
+        res[0] = 1.; //En este caso es una funion -u''=1 . Otros ejemplo: res[0] = x[0]. -u'' = x, Si res[0] = x[0]*x[0]. -u'' = x^2.
     };
     mat1->SetForceFunction(force);
+
+
+    //Condições de contorno de L2 usando o conceito de L2 projection
     MatrixDouble proj(1,1),val1(1,1),val2(1,1);
     proj.setZero();
     val1.setZero();
     val2.setZero();
-    L2Projection *bc_linha = new L2Projection(0,2,proj,val1,val2);
-    L2Projection *bc_point = new L2Projection(0,3,proj,val1,val2);
-    std::vector<MathStatement *> mathvec = {0,mat1,bc_point,bc_linha};
-    cmesh.SetMathVec(mathvec);
-    cmesh.SetDefaultOrder(2);
-    cmesh.AutoBuild();
+    // 0 bctype significa dirichlet, ou imposição em u
+    L2Projection *bc_linha = new L2Projection(0 /*bctype*/,2 /*matid*/,proj,val1,val2);
+    L2Projection *bc_point = new L2Projection(0 /*bctype*/,3,proj,val1,val2);
+
+        //Setando todos os mathstatemnet do problenma na malha computacional. incluindo as condições de contorno
+    std::vector<MathStatement *> mathvec = {nullptr,mat1,bc_linha,bc_point};
+    cmesh.SetMathVec(mathvec); //vetor de ponteros mathvec para MathStatemetn
+    cmesh.SetDefaultOrder(1);
+    cmesh.AutoBuild(); //solo cria 
     cmesh.Resequence();
 
     
-    
+    //Criação do analysis e rodando a simulação que envolce Assemble() e Solve()
     Analysis AnalysisLoc(&cmesh);
-    AnalysisLoc.RunSimulation();
+    AnalysisLoc.RunSimulation(); // aquí se hace el ensamble de las matrices y resue
     
+    std::cout << cmesh.Solution() << std::endl;
+
+    //Posprocessamento do erro baseado na solução exata (exact)
     PostProcessTemplate<Poisson> postprocess;
     postprocess.SetExact(exact);
-    
     VecDouble errvec;
-    errvec = AnalysisLoc.PostProcessError(std::cout, postprocess);
+    errvec = AnalysisLoc.PostProcessError(std::cout, postprocess); //imprimo el error
     
     
     return 0;

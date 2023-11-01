@@ -10,24 +10,36 @@
 #include <vector>
 #include <math.h>
 #include <cmath>
+#include "tpanic.h"
 ///\endcond
 using namespace std;
 
 #define PI 3.141592654
 
-IntRule1d::IntRule1d(){
-
+IntRule1d::IntRule1d(){ //Construtor que inicializa a ordem da regra de integração como zero
+    SetOrder(0);
 }
 
-IntRule1d::IntRule1d(int order) : IntRule(order) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+IntRule1d::IntRule1d(int order) : IntRule(order) { //Construtor que permite especificar a ordem da regra de integração ao criar um objeto. Chama o método SetOrder para configurar a ordem
+    SetOrder(order);
 }
 
 void IntRule1d::SetOrder(int order) {
+    if (order < 0 || order > MaxOrder()){ //  || = ou
+        DebugStop();
+    }
     fOrder = order;
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    int np=order/2 + 1;
+    VecDouble co(np);
+    fWeights.resize(np,1);
+    //Computes the coordinates and weights
+    gauleg(-1.,1.,co,fWeights);
+    // update the datastructure
+    this->fPoints.resize(np,1);
+    for(int ip=0; ip<np; ip++) {
+        fPoints(ip,0)=co[ip];
+    }
+    //DebugStop();
 }
 
 void IntRule1d::gauleg(const double x1, const double x2, VecDouble &co, VecDouble &w){

@@ -81,13 +81,21 @@ void L2Projection::Contribute(IntPointData &data, double weight, MatrixDouble &E
 
     //+++++++++++++++++
     // Please implement me
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+    //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
+    //DebugStop();
+
+
+    //BCType:
+    //0: DIRICHLET 1 nEUMANN 2 Mixed
+
 
     switch (this->GetBCType()) {
 
         case 0:
         {
+            EF += weight*data.phi*result[0]*gBigNumber;//result[0]
+            EK += gBigNumber*weight*data.phi*data.phi.transpose();
+
             // Your code here
             break;
         }
@@ -95,6 +103,8 @@ void L2Projection::Contribute(IntPointData &data, double weight, MatrixDouble &E
         case 1:
         {
             // Your code here
+            //Please implement me
+            DebugStop();
             break;
         }
 

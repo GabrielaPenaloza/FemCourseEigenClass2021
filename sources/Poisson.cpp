@@ -132,13 +132,21 @@ void Poisson::Contribute(IntPointData &data, double weight, MatrixDouble &EK, Ma
         VecDouble resloc(1);
         force(data.x, resloc);
         res = resloc[0];
+
+        //quto force=this ->GetForceFunction()
+
+
+
     }
 
+    
     //+++++++++++++++++
     // Please implement me
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
+   //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
+   // DebugStop();
     //+++++++++++++++++
+    EK += weight*dphi3*perm*dphi2;
+    EF += weight*res*phi;
 }
 
 void Poisson::PostProcessSolution(const IntPointData &data, const int var, VecDouble &Solout) const {

@@ -65,6 +65,8 @@ void Analysis::RunSimulation() {
 
     assemb.Compute(K, F);
     std::cout << "Assemble done!" << std::endl;
+    std::cout << "k!" << K << std::endl;
+    std::cout << "F!" << F << std::endl;
 
     GlobalSystem = K;
     RightHandSide = F;
@@ -74,8 +76,13 @@ void Analysis::RunSimulation() {
     SparseLU<SparseMat, COLAMDOrdering<int> >   solver;
     // Compute the ordering permutation vector from the structural pattern of A
     solver.analyzePattern(K); 
-    // Compute the numerical factorization 
-    solver.factorize(K); 
+    // Compute the numerical factorization
+    solver.factorize(K);
+    if(solver.lastErrorMessage().size()){
+        std::cout << "\n\n=====> Solver has thrown the following error: " << std::endl;
+        std::cout << solver.lastErrorMessage() << std::endl;
+        DebugStop();
+    }
     //Use the factors to solve the linear system 
     Solution = solver.solve(F); 
 

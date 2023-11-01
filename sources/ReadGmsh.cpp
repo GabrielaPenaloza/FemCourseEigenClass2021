@@ -272,7 +272,7 @@ static std::string GetFileVersion(const std::string& file_name){
         std::cout << "Couldn't open the file " << file_name << std::endl;
         std::cout << "Maybe you have a wrong relative path. Check the current work directory you're running this executable from." << std::endl;
         DebugStop();
-    }
+    } 
 
     while(read){
         char buf[1024];

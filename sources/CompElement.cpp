@@ -170,21 +170,89 @@ void CompElement::Convert2Axes(const MatrixDouble &dphi, const MatrixDouble &jac
 
 void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
     // First thing you need is the variational formulation
-    MathStatement *material = this->GetStatement();
+    MathStatement *material = this->GetStatement(); 
     if (!material) {
         std::cout << "Error at CompElement::CalcStiff" << std::endl;
         return;
     }
     // Second, you should clear the matrices you're going to compute
-    ek.setZero();
-    ef.setZero();
+    ek.setZero(); //Matriz de zeros
+    ef.setZero(); //Matriz de zeros
 
-    //+++++++++++++++++
-    // Please implement me
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
-    //+++++++++++++++++
+    const int np = intrule -> NPoints();
+    const int dim = Dimension();
+
+    IntPointData data;
+    InitializeIntPointData(data);
+
+    for (int i=0;i<np;i++){
+        intrule->Point(i,data.ksi,data.weight); //Point(int p, VecDouble& co, double& w)
+        ComputeRequiredData(data,data.ksi);
+        data.weight *= fabs(data.detjac);
+        material->Contribute(data,data.weight,ek,ef);
+        //data.ComputeSolution();
+
+
+
+
+
+
+
+   /* IntRule *intrule = this->GetIntRule();
+    int maxIntOrder =intrule->MaxOrder(); //maxIntOrder=devuelve 5
+    
+    //cout << maxIntOrder << endl;
+
+    intrule->SetOrder(maxIntOrder);  //fOrder = maxIntOrder. Se utiliza la regla de integración de mayor orden disponible.
+
+    int np = intrule->NPoints(); //intrule es una variable local, y no necesita de this.
+
+
+    IntPointData data;
+    this->InitializeIntPointData(data);
+    int nshape = this->NShapeFunctions();
+
+    //cout << nshape << endl; //Dando 2
+    //cout << np << endl; //Dando 3
+    //cout << data.ksi <<endl;
+
+    for (int k=0;k<np;k++){
+        intrule->Point(k,data.ksi,data.weight); //Point(int p, VecDouble& co, double& w)
+        this->ComputeRequiredData(data,data.ksi);
+        data.weight *= fabs(data.detjac);
+        
+        material->Contribute(data,data.weight,ek,ef);
+        //data.ComputeSolution();
+        
+       
+        //cout << data.ksi <<endl;
+       // cout<<data.detjac<<endl;
+
+     /*    for (int i=0;i<nshape;i++){
+            //cout << i << endl;
+            cout << data.phi(i) << endl;
+            ef(i,0) += data.phi(i)*data.weight;
+            for (int j=0;j<nshape;j++){
+                //cout << i << endl;
+               // cout << data.dphidksi(0,i) << endl;
+                ek(i,j)+=data.dphidx(0,i)*data.dphidx(0,j)*data.weight;
+ 
+             
+                
+                
+            }
+        } */ 
+    }
+
+    //cout << ek <<endl;
+    //cout << ef <<endl;*/
 }
+
+
+   //ek(i,j)+=1/data.detjac*1/data.detjac*data.weight; 
+    //ek(i,j)+=data.dphidksi(0,i)*1/data.detjac*data.dphidksi(0,j)*1/data.detjac*data.weight; 
+
+
 
 void CompElement::EvaluateError(std::function<void(const VecDouble &loc, VecDouble &val, MatrixDouble &deriv) > fp, VecDouble &errors) const {
     MathStatement * material = this->GetStatement();
@@ -235,7 +303,7 @@ void CompElement::EvaluateError(std::function<void(const VecDouble &loc, VecDoub
     for (int ier = 0; ier < NErrors; ier++) {
         errors[ier] = sqrt(errors[ier]);
     }
-}
+  }
 
 void CompElement::Solution(VecDouble &intpoint, int var, VecDouble &sol) const {
     MathStatement * material = this->GetStatement();
