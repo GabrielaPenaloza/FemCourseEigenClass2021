@@ -11,31 +11,126 @@
 #include "IntRuleQuad.h"
 
 IntRuleQuad::IntRuleQuad(){
+    SetOrder(0);
 }
 
 IntRuleQuad::IntRuleQuad(int order) {
-    std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    DebugStop();
-}
-
-void IntRuleQuad::SetOrder(int order) { //Definir coordenadas y pesos integración
-    
-    //VecDouble co,w;
-    fOrder = order;
-    const int np1d = order/2+1;
-    gaulegQuad(-1,1,fPoints,fWeights,np1d);
-
-    
-
+    SetOrder(order);
     //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
     //DebugStop();
 }
 
-void IntRuleQuad::gaulegQuad(const double x1, const double x2, MatrixDouble &co, VecDouble &w, const int np1d) {
+void IntRuleQuad::SetOrder(int order) {
+    //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
+    //DebugStop();
+    //VecDouble co,w;
+    
+    // fOrder = order;
+
+    // if (order < 0 || order > MaxOrder()) {
+    //     DebugStop();
+    // }
+
+    // int nPoints = order/2+1; //2*order-1;
+    // if (order == 0) {
+    //     nPoints = 1;
+    // }
+    // fPoints.resize(nPoints*nPoints,2);
+    // fWeights.resize(nPoints);//is resized in GaulegQuad
+    
+    // VecDouble coordAux(nPoints);
+    // gaulegQuad(-1,1,coordAux,fWeights);
+
+    // for (int i = 0; i < nPoints; i++)
+    // {
+    //     for (int j = 0; j < nPoints; j++)
+    //     {
+    //         fPoints(i*nPoints+j,0) = coordAux[i];
+    //         fPoints(j+i*nPoints,1) = coordAux[j+nPoints];
+    //     }
+    // }
+
+    fOrder = order;
+    switch (order)
+    {
+    case 0:
+    case 1:
+        fPoints.resize(1,2);
+        fWeights.resize(1);
+
+        fPoints(0,0) = 0.;
+        fPoints(0,1) = 0.;
+
+        fWeights[0] = 4.;
+        
+        break;
+    case 2:
+    case 3:
+        fPoints.resize(4,2);
+        fWeights.resize(4);
+
+        fPoints(0,0) = -1./sqrt(3.);
+        fPoints(0,1) = -1./sqrt(3.);
+        fPoints(1,0) = 1./sqrt(3.);
+        fPoints(1,1) = -1./sqrt(3.);
+        fPoints(2,0) = -1./sqrt(3.);
+        fPoints(2,1) = 1./sqrt(3.);
+        fPoints(3,0) = 1./sqrt(3.);
+        fPoints(3,1) = 1./sqrt(3.);
+
+        fWeights[0] = 1.;
+        fWeights[1] = 1.;
+        fWeights[2] = 1.;
+        fWeights[3] = 1.;
+
+        break; 
+    case 4:
+    case 5: 
+        fPoints.resize(9,2);
+        fWeights.resize(9);
+
+        fPoints(0,0) = -sqrt(3./5.);
+        fPoints(0,1) = -sqrt(3./5.);
+        fPoints(1,0) = 0.;
+        fPoints(1,1) = -sqrt(3./5.);
+        fPoints(2,0) = sqrt(3./5.);
+        fPoints(2,1) = -sqrt(3./5.);
+        fPoints(3,0) = -sqrt(3./5.);
+        fPoints(3,1) = 0.;
+        fPoints(4,0) = 0.;
+        fPoints(4,1) = 0.;
+        fPoints(5,0) = sqrt(3./5.);
+        fPoints(5,1) = 0.;
+        fPoints(6,0) = -sqrt(3./5.);
+        fPoints(6,1) = sqrt(3./5.);
+        fPoints(7,0) = 0.;
+        fPoints(7,1) = sqrt(3./5.);
+        fPoints(8,0) = sqrt(3./5.);
+        fPoints(8,1) = sqrt(3./5.);
+
+        fWeights[0] = 25./81.;
+        fWeights[0] = 40./81.;
+        fWeights[0] = 25./81.;
+        fWeights[0] = 40./81.;
+        fWeights[0] = 64./81.;
+        fWeights[0] = 40./81.;
+        fWeights[0] = 25./81.;
+        fWeights[0] = 40./81.;
+        fWeights[0] = 25./81.;
+
+        break;
+    default:
+        DebugStop();
+        break;
+    }
+}
+
+
+void IntRuleQuad::gaulegQuad(const double x1, const double x2, VecDouble &co, VecDouble &w) {
     IntRule1d x;
     IntRule1d y;
     
-    int n = np1d;   
+    int n = w.size();   
 
     VecDouble cox(n);
     VecDouble coy(n);
@@ -46,13 +141,13 @@ void IntRuleQuad::gaulegQuad(const double x1, const double x2, MatrixDouble &co,
     x.gauleg(x1, x2, cox, wx);
     y.gauleg(x1, x2, coy, wy);
     
-    co.resize(n*n,2);
+    co.resize(2*n*n);
     w.resize(n * n);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            co(j+i*n,0) = cox[j];
-            co(j+i*n,1) = coy[i];
+            co[j + i * n] = cox[j];
+            co[j + i * n + n * n] = coy[i];
             w[n * i + j] = wx[i] * wy[j];
         }
     }

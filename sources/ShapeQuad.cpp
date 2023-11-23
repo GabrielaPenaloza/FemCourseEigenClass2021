@@ -30,8 +30,26 @@ void ShapeQuad::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, Matri
         DebugStop();
     }
 
-    std::cout << "Please implement me\n";
-    DebugStop();
+     
+    phi.resize(nf);
+    dphi.resize(Dimension,nf);
+
+    double qsi = xi[0];
+    double eta = xi[1];
+
+    phi[0] = (1.-qsi)*(1.-eta)/4.;
+    phi[1] = (1.+qsi)*(1.-eta)/4.;
+    phi[2] = (1.+qsi)*(1.+eta)/4.;
+    phi[3] = (1.-qsi)*(1.+eta)/4.;
+
+    dphi(0,0) = (eta-1.)/4.;
+    dphi(1,0) = (qsi-1.)/4.;
+    dphi(0,1) = (1.-eta)/4.;
+    dphi(1,1) = (-1.-qsi)/4.;
+    dphi(0,2) = (1.+eta)/4.;
+    dphi(1,2) = (1.+qsi)/4.;
+    dphi(0,3) = (-1.-eta)/4.;
+    dphi(1,3) = (1.-qsi)/4.;
 }
 
 /// returns the number of shape functions associated with a side

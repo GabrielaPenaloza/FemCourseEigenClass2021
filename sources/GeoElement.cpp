@@ -117,7 +117,7 @@ void GeoElement::Jacobian(const MatrixDouble &gradx, MatrixDouble &jac, MatrixDo
 
             for (int i = 0; i < 3; i++) {
                 v_1_til[i] = v_1[i] / norm_v_1_til;
-                v_2_til[i] = v_2[i] - v_1_dot_v_2 * v_1_til[i] / norm_v_1_til;
+                v_2_til[i] = v_2[i] - v_1_dot_v_2 * v_1_til[i] / norm_v_1_til; //Ortogonal a V_1til
                 norm_v_2_til += v_2_til[i] * v_2_til[i];
             }
             norm_v_2_til = sqrt(norm_v_2_til);
