@@ -30,7 +30,7 @@ int main ()
     GeoMesh gmesh;
     ReadGmsh read;
     
-    bool recombine = true;
+    bool recombine = false; 
 
     std::string filename = (recombine) ? "MeshQuad" :  "MeshTri";
 
@@ -68,6 +68,7 @@ int main ()
         //deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
     };
 
+    mat1->SetExactSolution(exact);
     mat1->SetForceFunction(force);
     MatrixDouble proj(1,1),val1(1,1),val2(1,1);
     proj.setZero();

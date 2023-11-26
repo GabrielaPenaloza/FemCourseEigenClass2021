@@ -283,7 +283,7 @@ void CompElement::EvaluateError(std::function<void(const VecDouble &loc, VecDoub
 
     VecDouble u_exact(nstate);
     MatrixDouble du_exact(dim, nstate);
-    fp(data.x, u_exact, du_exact);
+    //fp(data.x, u_exact, du_exact);
 
     for (int nint = 0; nint < nintpoints; nint++) {
         values.setZero();

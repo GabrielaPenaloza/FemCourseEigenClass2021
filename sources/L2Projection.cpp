@@ -104,7 +104,7 @@ void L2Projection::Contribute(IntPointData &data, double weight, MatrixDouble &E
         {
             // Your code here
             //Please implement me
-            DebugStop();
+            EF += weight * data.phi * result[0];
             break;
         }
 

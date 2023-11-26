@@ -21,34 +21,6 @@ IntRuleQuad::IntRuleQuad(int order) {
 }
 
 void IntRuleQuad::SetOrder(int order) {
-    //std::cout << "\nPLEASE IMPLEMENT ME\n" << __PRETTY_FUNCTION__ << std::endl;
-    //DebugStop();
-    //VecDouble co,w;
-    
-    // fOrder = order;
-
-    // if (order < 0 || order > MaxOrder()) {
-    //     DebugStop();
-    // }
-
-    // int nPoints = order/2+1; //2*order-1;
-    // if (order == 0) {
-    //     nPoints = 1;
-    // }
-    // fPoints.resize(nPoints*nPoints,2);
-    // fWeights.resize(nPoints);//is resized in GaulegQuad
-    
-    // VecDouble coordAux(nPoints);
-    // gaulegQuad(-1,1,coordAux,fWeights);
-
-    // for (int i = 0; i < nPoints; i++)
-    // {
-    //     for (int j = 0; j < nPoints; j++)
-    //     {
-    //         fPoints(i*nPoints+j,0) = coordAux[i];
-    //         fPoints(j+i*nPoints,1) = coordAux[j+nPoints];
-    //     }
-    // }
 
     fOrder = order;
     switch (order)
@@ -109,14 +81,14 @@ void IntRuleQuad::SetOrder(int order) {
         fPoints(8,1) = sqrt(3./5.);
 
         fWeights[0] = 25./81.;
-        fWeights[0] = 40./81.;
-        fWeights[0] = 25./81.;
-        fWeights[0] = 40./81.;
-        fWeights[0] = 64./81.;
-        fWeights[0] = 40./81.;
-        fWeights[0] = 25./81.;
-        fWeights[0] = 40./81.;
-        fWeights[0] = 25./81.;
+        fWeights[1] = 40./81.;
+        fWeights[2] = 25./81.;
+        fWeights[3] = 40./81.;
+        fWeights[4] = 64./81.;
+        fWeights[5] = 40./81.;
+        fWeights[6] = 25./81.;
+        fWeights[7] = 40./81.;
+        fWeights[8] = 25./81.;
 
         break;
     default:

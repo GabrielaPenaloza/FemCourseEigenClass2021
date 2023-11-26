@@ -70,11 +70,13 @@ void GeoElementTemplate<TGeom>::GradX(const VecDouble &xi, VecDouble &x, MatrixD
     int NNodes = this->NNodes();
     MatrixDouble coord(3, NNodes);
     coord.setZero();
+    
+    int dim = GMesh -> Dimension();
     int i, j;
     for (i = 0; i < NNodes; i++) {
         int index = this->NodeIndex(i);
         GeoNode node = GMesh->Node(index);
-        for (j = 0; j < 1; j++) {
+        for (j = 0; j < dim; j++) {
             coord(j, i) = node.Coord(j);
         }
     }

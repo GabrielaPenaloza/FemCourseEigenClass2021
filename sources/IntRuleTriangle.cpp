@@ -17,6 +17,8 @@ IntRuleTriangle::IntRuleTriangle(int order) {
     SetOrder(order);
 }
 
+//https://mathsfromnothing.au/triangle-quadrature-rules/?i=3
+
 void IntRuleTriangle::SetOrder(int order) {
     fOrder = order;
     switch (order)
@@ -30,7 +32,7 @@ void IntRuleTriangle::SetOrder(int order) {
         fPoints(0,0) = 1./3.; //Coordenada ksi
         fPoints(0,1) = 1./3.; //Coordenada eta
 
-        fWeights[0] = 1/2; //Peso é 1, mas se divide por dois devido a área do triángulo
+        fWeights[0] = 1./2.; //Peso é 1, mas se divide por dois devido a área do triángulo
         
         break;
     case 2:
@@ -52,7 +54,6 @@ void IntRuleTriangle::SetOrder(int order) {
         fWeights[0] = 1./6.; //Peso é 1/3, mas se divide por dois devido a área do triángulo
         fWeights[1] = 1./6.;
         fWeights[2] = 1./6.;
-        fWeights[3] = 1./6.;
 
         break; 
     case 3:
@@ -75,7 +76,7 @@ void IntRuleTriangle::SetOrder(int order) {
         fPoints(3,0) = 3./5.;
         fPoints(3,1) = 1./5.;
 
-        fWeights[0] = -9/32; //Peso é -0.5625, mas se divide por dois devido a área do triángulo
+        fWeights[0] = -9./32.; //Peso é -0.5625, mas se divide por dois devido a área do triángulo
         fWeights[1] = 25./96.; //Peso é 0.520833333333333, mas se divide por dois devido a área do triángulo
         fWeights[2] = 25./96.;
         fWeights[3] = 25./96.;
@@ -83,8 +84,8 @@ void IntRuleTriangle::SetOrder(int order) {
         break;
 
     case 4:
-        fPoints.resize(4,2);
-        fWeights.resize(4);
+        fPoints.resize(6,2);
+        fWeights.resize(6);
 
         //Ponto 1
         fPoints(0,0) = 0.445948490915965;
@@ -111,12 +112,41 @@ void IntRuleTriangle::SetOrder(int order) {
         fPoints(5,1) = 0.091576213509771;
 
 
-        fWeights[0] = 0.223381589678011; 
-        fWeights[1] = 0.223381589678011; 
-        fWeights[2] = 0.223381589678011;
-        fWeights[3] = 0.109951743655322;
-        fWeights[4] = 0.109951743655322;
-        fWeights[5] = 0.109951743655322;
+        fWeights[0] = 0.223381589678011/2.; 
+        fWeights[1] = 0.223381589678011/2.; 
+        fWeights[2] = 0.223381589678011/2.;
+        fWeights[3] = 0.109951743655322/2.;
+        fWeights[4] = 0.109951743655322/2.;
+        fWeights[5] = 0.109951743655322/2.;
+
+        break;
+
+    case 5:
+        fPoints.resize(7,2);
+        fWeights.resize(7);
+
+        fPoints(0,0) = 0.333333333333333;
+        fPoints(0,1) = 0.333333333333333;
+        fPoints(1,0) = 0.470142064105115;
+        fPoints(1,1) = 0.059715871789770;
+        fPoints(2,0) = 0.470142064105115;
+        fPoints(2,1) = 0.470142064105115;
+        fPoints(3,0) = 0.059715871789770;
+        fPoints(3,1) = 0.470142064105115;
+        fPoints(4,0) = 0.101286507323456;
+        fPoints(4,1) = 0.797426985353087;
+        fPoints(5,0) = 0.101286507323456;
+        fPoints(5,1) = 0.101286507323456;
+        fPoints(6,0) = 0.797426985353087;
+        fPoints(6,1) = 0.101286507323456;
+
+        fWeights[0] = 0.225/2.;
+        fWeights[1] = 0.132394152788506/2.;
+        fWeights[2] = 0.132394152788506/2.;
+        fWeights[3] = 0.132394152788506/2.;
+        fWeights[4] = 0.125939180544827/2.;
+        fWeights[5] = 0.125939180544827/2.;
+        fWeights[6] = 0.125939180544827/2.;
 
         break;
 
