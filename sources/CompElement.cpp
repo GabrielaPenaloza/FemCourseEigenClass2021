@@ -244,13 +244,11 @@ void CompElement::CalcStiff(MatrixDouble &ek, MatrixDouble &ef) const {
         } */ 
     }
 
-    //cout << ek <<endl;
-    //cout << ef <<endl;*/
+  
 }
 
 
-   //ek(i,j)+=1/data.detjac*1/data.detjac*data.weight; 
-    //ek(i,j)+=data.dphidksi(0,i)*1/data.detjac*data.dphidksi(0,j)*1/data.detjac*data.weight; 
+
 
 
 

@@ -30,7 +30,7 @@ int main ()
     GeoMesh gmesh;
     ReadGmsh read;
     
-    bool recombine = false; 
+    bool recombine = true; 
 
     std::string filename = (recombine) ? "MeshQuad" :  "MeshTri";
 
@@ -51,7 +51,6 @@ int main ()
     auto force = [](const VecDouble &x, VecDouble &res)
     {
         res[0]=0.;
-        //res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];
     };
     
         auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
@@ -61,12 +60,13 @@ int main ()
 
         val[0] = tempX*tempY;
         deriv(0,0) = tempY;
-        deriv(1,0) = tempX;    
-          
-        //val[0] = (1.-x[0])*x[0]*(1-x[1])*x[1];
-        //deriv(0,0) = (1.-2.*x[0])*(1-x[1])*x[1];
-        //deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
+        deriv(1,0) = tempX; 
     };
+
+    //res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];  
+    //val[0] = (1.-x[0])*x[0]*(1-x[1])*x[1];
+    //deriv(0,0) = (1.-2.*x[0])*(1-x[1])*x[1];
+    //deriv(1,0) = (1-2.*x[1])*(1-x[0])*x[0];
 
     mat1->SetExactSolution(exact);
     mat1->SetForceFunction(force);
@@ -90,7 +90,7 @@ int main ()
     //cmesh.SetMathStatement(1,bc_linha);
    
    
-    cmesh.SetDefaultOrder(1);
+    cmesh.SetDefaultOrder(2);
     cmesh.AutoBuild();
     cmesh.Resequence();
 

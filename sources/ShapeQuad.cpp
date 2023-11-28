@@ -50,7 +50,38 @@ void ShapeQuad::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, Matri
     dphi(1,2) = (1.+qsi)/4.;
     dphi(0,3) = (-1.-eta)/4.;
     dphi(1,3) = (1.-qsi)/4.;
+
+    //Ordem quadratico
+    double phiBolha = 4.*phi[0]*phi[2]; 
+
+    VecDouble dphibolha(2);
+    dphibolha[0] = 4.*(dphi(0,0)*phi[2]+phi[0]*dphi(0,2));
+    dphibolha[1] = 4.*(dphi(1,0)*phi[2]+phi[0]*dphi(1,2));
+
+    int count = 4;
+
+    for(int i=4; i<8; i++){ // arestas
+        if(orders[i]==2){
+            int aux1 = SideNodeLocIndex(i, 0);
+            int aux2 = SideNodeLocIndex(i, 1);
+
+            phi[count] = 4.*phi[aux1]*phi[aux2]+phiBolha;
+
+            dphi(0,count) = 4.*(dphi(0,aux1)*phi[aux2]+phi[aux1]*dphi(0,aux2))+dphibolha[0];
+            dphi(1,count) = 4.*(dphi(1,aux1)*phi[aux2]+phi[aux1]*dphi(1,aux2))+dphibolha[1];
+
+            count++; 
+        }
+    }
+
+    if(orders[8]==2){ // face
+
+        phi[count] = 4.*phiBolha;
+        dphi(0,count) = 4.*dphibolha[0];
+        dphi(1,count) = 4.*dphibolha[1];
+    }
 }
+
 
 /// returns the number of shape functions associated with a side
 int ShapeQuad::NShapeFunctions(int side, int order){

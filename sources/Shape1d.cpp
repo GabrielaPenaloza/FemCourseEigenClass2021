@@ -29,16 +29,19 @@ void Shape1d::Shape(const VecDouble &xi, VecInt &orders, VecDouble &phi, MatrixD
     phi.resize(nshape);
     dphi.resize(1,nshape);
 
-    phi[0]=(1.-xi[0])/2;
-    phi[1]=(1.+xi[0])/2;
-    
-
+    phi[0] = (1. - xi[0]) / 2.;
+    phi[1] = (1 + xi[0]) / 2.;
     dphi(0, 0) = -0.5;
     dphi(0, 1) = 0.5;
-   
 
-    //std::cout << "Please implement me\n";
-    //DebugStop();
+    if((nshape-1)==2){
+        phi[2] = 4.* phi[0]*phi[1];
+        dphi(0, 2) = 4. * (dphi(0, 0) * phi[1] + dphi(0, 1)*phi[0]);
+    }
+    else if((nshape-1)!=1){
+        DebugStop();
+    }
+        
 }
 
 /// returns the number of shape functions associated with a side
