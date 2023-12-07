@@ -32,7 +32,7 @@ int main ()
     
     bool recombine = true; 
 
-    std::string filename = (recombine) ? "MeshQuad" :  "MeshTri";
+    std::string filename = (recombine) ? "MalhaAnelQuad4" :  "MalhaAnelTria4"; //MalhaAnelTria4
 
 #ifdef MACOSX
     filename = "../"+filename;
@@ -48,19 +48,27 @@ int main ()
     Poisson *mat1 = new Poisson(1,perm);
     mat1->SetDimension(2);
 
-    auto force = [](const VecDouble &x, VecDouble &res)
+     auto force = [](const VecDouble &x, VecDouble &res)
     {
-        res[0]=0.;
+        const double tempX = x[0];
+        const double tempY = x[1];
+        double pi = M_PI;
+        
+
+        res[0]=10.*pi*pi*sin(3.*pi*x[0])*sin(pi*x[1]);
+
     };
     
         auto exact = [](const VecDouble &x, VecDouble &val, MatrixDouble &deriv)
     {
         const double tempX = x[0];
         const double tempY = x[1];
+        double pi = M_PI;
 
-        val[0] = tempX*tempY;
-        deriv(0,0) = tempY;
-        deriv(1,0) = tempX; 
+        val[0] = sin(3.*pi*x[0])*sin(pi*x[1]);
+        deriv(0,0) = 3.*pi*cos(3.*pi*x[0])*sin(pi*x[1]);
+        deriv(1,0) = pi*cos(pi*x[1])*sin(3.*pi*x[0]);    
+          
     };
 
     //res[0] = 2.*(1.-x[0])*x[0]+2.*(1-x[1])*x[1];  
